@@ -22,6 +22,6 @@ public class ConsoleProgress implements Runnable {
         progress.start();
         Thread.sleep(10000);
         progress.interrupt();
-        System.out.print("\n Loading is complete");
+        System.out.println("\n Loading is complete");
     }
 }
