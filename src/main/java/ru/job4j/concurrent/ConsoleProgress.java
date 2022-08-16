@@ -9,7 +9,7 @@ public class ConsoleProgress implements Runnable {
         List<Character> process = List.of('-', '\\', '|', '/');
         while (!Thread.currentThread().isInterrupted()) {
             try {
-                System.out.print("\r Loading ... " + process.get(count++ % 4));
+                System.out.print("\r Loading ... " + process.get(count++ % process.size()));
                 Thread.sleep(500);
             } catch (InterruptedException ex) {
                 Thread.currentThread().interrupt();
