@@ -7,8 +7,6 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URL;
-import java.nio.file.Files;
-import java.nio.file.Path;
 
 public class Wget implements Runnable {
 
@@ -90,6 +88,6 @@ public class Wget implements Runnable {
         wget.join();
         progress.interrupt();
         long finish = System.currentTimeMillis();
-        System.out.printf("\nLoading is complete. Time download : %d", (finish - start)/ TIME_DOWNLOAD);
+        System.out.printf("\nLoading is complete. Time download : %d", (finish - start) / TIME_DOWNLOAD);
     }
 }
