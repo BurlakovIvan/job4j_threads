@@ -11,8 +11,13 @@ public final class ParseFile implements Parse {
     }
 
     @Override
-    public synchronized String getContent(Predicate<Integer> filter) {
-        return content(filter);
+    public synchronized String getContent() {
+        return content(data -> true);
+    }
+
+    @Override
+    public String getContentWithoutUnicode() {
+        return content(data -> data < 0x80);
     }
 
     private String content(Predicate<Integer> filter) {
