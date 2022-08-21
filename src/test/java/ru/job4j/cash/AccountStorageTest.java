@@ -9,7 +9,8 @@ class AccountStorageTest {
     @Test
     void whenAdd() {
         var storage = new AccountStorage();
-        storage.add(new Account(1, 100));
+        assertThat(storage.add(new Account(1, 100))).isTrue();
+        assertThat(storage.add(new Account(1, 100))).isFalse();
         var firstAccount = storage.getById(1)
                 .orElseThrow(() -> new IllegalStateException("Not found account by id = 1"));
         assertThat(firstAccount.amount()).isEqualTo(100);
@@ -18,8 +19,8 @@ class AccountStorageTest {
     @Test
     void whenUpdate() {
         var storage = new AccountStorage();
-        storage.add(new Account(1, 100));
-        storage.update(new Account(1, 200));
+        assertThat(storage.add(new Account(1, 100))).isTrue();
+        assertThat(storage.update(new Account(1, 200))).isTrue();
         var firstAccount = storage.getById(1)
                 .orElseThrow(() -> new IllegalStateException("Not found account by id = 1"));
         assertThat(firstAccount.amount()).isEqualTo(200);
@@ -29,7 +30,8 @@ class AccountStorageTest {
     void whenDelete() {
         var storage = new AccountStorage();
         storage.add(new Account(1, 100));
-        storage.delete(1);
+        assertThat(storage.delete(1)).isTrue();
+        assertThat(storage.delete(3)).isFalse();
         assertThat(storage.getById(1)).isEmpty();
     }
 
@@ -48,22 +50,34 @@ class AccountStorageTest {
     }
 
     @Test
-    void whenTransferWithWrongAccount() {
+    void whenTransferWithWrongAccountFrom() {
         var storage = new AccountStorage();
         storage.add(new Account(1, 100));
         storage.add(new Account(2, 100));
-        assertThatThrownBy(() -> storage.transfer(3, 2, 100))
-                .isExactlyInstanceOf(IllegalArgumentException.class)
-                .hasMessage("Не существует счета с которого переводим");
+        assertThat(storage.transfer(3, 2, 100)).isFalse();
+    }
+
+    @Test
+    void whenTransferWithWrongAccountTo() {
+        var storage = new AccountStorage();
+        storage.add(new Account(1, 100));
+        storage.add(new Account(2, 100));
+        assertThat(storage.transfer(1, 3, 100)).isFalse();
+    }
+
+    @Test
+    void whenTransferWithNegativeAmount() {
+        var storage = new AccountStorage();
+        storage.add(new Account(1, 300));
+        storage.add(new Account(2, 100));
+        assertThat(storage.transfer(1, 2, -400)).isFalse();
     }
 
     @Test
     void whenTransferWithWrongAmount() {
         var storage = new AccountStorage();
-        storage.add(new Account(1, 300));
-        storage.add(new Account(2, 100));
-        assertThatThrownBy(() -> storage.transfer(1, 2, -400))
-                .isExactlyInstanceOf(IllegalArgumentException.class)
-                .hasMessage("Не корректно задана сумма перевода");
+        assertThat(storage.add(new Account(1, 300))).isTrue();
+        assertThat(storage.add(new Account(2, 100))).isTrue();
+        assertThat(storage.transfer(1, 2, 400)).isFalse();
     }
 }

@@ -13,7 +13,7 @@ public final class AccountStorage {
 
     public boolean add(Account account) {
         synchronized (accounts) {
-            return account != null && accounts.putIfAbsent(account.id(), account) != null;
+            return account != null && accounts.putIfAbsent(account.id(), account) == null;
         }
     }
 
@@ -26,7 +26,7 @@ public final class AccountStorage {
     public boolean delete(int id) {
         synchronized (accounts) {
             var account = getById(id);
-            return account.isPresent() && accounts.remove(account.get().id(), account.get());
+            return account.isPresent() && accounts.remove(account.get().id()) != null;
         }
     }
 
@@ -39,26 +39,20 @@ public final class AccountStorage {
     public boolean transfer(int fromId, int toId, int amount) {
         synchronized (accounts) {
             var accountFromOpt = getById(fromId);
-            if (accountFromOpt.isEmpty()) {
-                throw new IllegalArgumentException("Не существует счета с которого переводим");
+            var accountToOpt = getById(toId);
+            if (accountFromOpt.isEmpty() || accountToOpt.isEmpty()
+                    || amount <= 0 || accountFromOpt.get().amount() < amount) {
+                return false;
             }
             var accountFrom = accountFromOpt.get();
-            if (amount <= 0 || accountFrom.amount() < amount) {
-                throw new IllegalArgumentException("Не корректно задана сумма перевода");
-            }
-            var accountToOpt = getById(toId);
-            if (accountToOpt.isEmpty()) {
-                throw new IllegalArgumentException("Не существует счета на который переводим");
-            }
             var accountTo = accountToOpt.get();
-            var rslFrom = update(new Account(accountFrom.id(),
+            var rsl = update(new Account(accountFrom.id(),
                     (accountFrom.amount() - amount)));
-            var rslTo = false;
-            if (rslFrom) {
-                rslTo = update(new Account(accountTo.id(),
+            if (rsl) {
+                rsl = update(new Account(accountTo.id(),
                         (accountTo.amount() + amount)));
             }
-            return rslTo;
+            return rsl;
         }
     }
 }
