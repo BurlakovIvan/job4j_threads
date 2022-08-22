@@ -16,7 +16,7 @@ public final class ParseFile implements Parse {
     }
 
     @Override
-    public String getContentWithoutUnicode() {
+    public synchronized String getContentWithoutUnicode() {
         return content(data -> data < 0x80);
     }
 
