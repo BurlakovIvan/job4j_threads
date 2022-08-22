@@ -46,13 +46,11 @@ public final class AccountStorage {
             }
             var accountFrom = accountFromOpt.get();
             var accountTo = accountToOpt.get();
-            var rsl = update(new Account(accountFrom.id(),
+            update(new Account(accountFrom.id(),
                     (accountFrom.amount() - amount)));
-            if (rsl) {
-                rsl = update(new Account(accountTo.id(),
+            update(new Account(accountTo.id(),
                         (accountTo.amount() + amount)));
-            }
-            return rsl;
+            return true;
         }
     }
 }
