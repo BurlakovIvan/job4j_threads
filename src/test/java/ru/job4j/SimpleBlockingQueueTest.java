@@ -16,14 +16,22 @@ class SimpleBlockingQueueTest {
                 () -> {
                     for (int i = 0; i < limit; i++) {
                         System.out.printf("Producer: %d \n", i);
-                        simpleBlockingQueue.offer(i);
+                        try {
+                            simpleBlockingQueue.offer(i);
+                        } catch (InterruptedException e) {
+                            throw new RuntimeException(e);
+                        }
                     }
                 }
         );
         Thread consumer = new Thread(
                 () -> {
                     for (int i = 0; i < limit; i++) {
-                        System.out.printf("Consumer: %d \n", simpleBlockingQueue.poll());
+                        try {
+                            System.out.printf("Consumer: %d \n", simpleBlockingQueue.poll());
+                        } catch (InterruptedException e) {
+                            throw new RuntimeException(e);
+                        }
                     }
                 }
         );
