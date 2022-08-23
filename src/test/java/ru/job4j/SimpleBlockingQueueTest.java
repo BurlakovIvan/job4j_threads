@@ -19,7 +19,7 @@ class SimpleBlockingQueueTest {
                         try {
                             simpleBlockingQueue.offer(i);
                         } catch (InterruptedException e) {
-                            throw new RuntimeException(e);
+                            Thread.currentThread().interrupt();
                         }
                     }
                 }
@@ -30,7 +30,7 @@ class SimpleBlockingQueueTest {
                         try {
                             System.out.printf("Consumer: %d \n", simpleBlockingQueue.poll());
                         } catch (InterruptedException e) {
-                            throw new RuntimeException(e);
+                            Thread.currentThread().interrupt();
                         }
                     }
                 }
