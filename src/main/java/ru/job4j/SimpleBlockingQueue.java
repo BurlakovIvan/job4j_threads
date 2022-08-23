@@ -42,4 +42,8 @@ public class SimpleBlockingQueue<T> {
     public synchronized Queue<T> getQueue() {
         return new LinkedList<>(queue);
     }
+
+    public synchronized boolean isEmpty() {
+        return queue.isEmpty();
+    }
 }
