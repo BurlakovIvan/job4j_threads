@@ -10,8 +10,12 @@ class ThreadPoolTest {
         ThreadPool threadPool = new ThreadPool();
         for (int i = 0; i < 1000; i++) {
             int taskNumber = i;
-            threadPool.work(() -> System.out.printf("Thread: %s. Task number: %d\n",
-                    Thread.currentThread().getName(), taskNumber));
+            try {
+                threadPool.work(() -> System.out.printf("Thread: %s. Task number: %d\n",
+                        Thread.currentThread().getName(), taskNumber));
+            } catch (InterruptedException ex) {
+                Thread.currentThread().interrupt();
+            }
         }
         try {
             Thread.sleep(1000);

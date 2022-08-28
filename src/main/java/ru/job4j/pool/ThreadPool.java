@@ -23,8 +23,7 @@ public class ThreadPool {
                     () -> {
                         while (!Thread.currentThread().isInterrupted()) {
                             try {
-                                var runnable = tasks.poll();
-                                runnable.run();
+                                tasks.poll().run();
                             } catch (InterruptedException e) {
                                 Thread.currentThread().interrupt();
                             }
@@ -36,12 +35,8 @@ public class ThreadPool {
         }
     }
 
-    public synchronized void work(Runnable job) {
-            try {
-                tasks.offer(job);
-            } catch (InterruptedException ex) {
-                Thread.currentThread().interrupt();
-            }
+    public synchronized void work(Runnable job) throws InterruptedException {
+        tasks.offer(job);
     }
 
     public void shutdown() {
