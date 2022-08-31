@@ -11,19 +11,19 @@ class SearchIndexTest {
 
     @Test
     void searchIntTen() {
-        List<Object> array = new ArrayList<>();
+        List<Integer> array = new ArrayList<>(1000);
         for (int i = 0; i < 1000; i++) {
             array.add(i);
         }
-        assertThat(SearchIndex.search(array, 10)).isEqualTo(10);
+        assertThat(SearchIndex.search(array.toArray(), 10)).isEqualTo(10);
     }
 
     @Test
     void searchStringTen() {
-        List<Object> array = new ArrayList<>();
+        List<String> array = new ArrayList<>(1000);
         for (int i = 0; i < 1000; i++) {
             array.add(String.format("%d", i));
         }
-        assertThat(SearchIndex.search(array, "10")).isEqualTo(10);
+        assertThat(SearchIndex.search(array.toArray(), "10")).isEqualTo(10);
     }
 }
