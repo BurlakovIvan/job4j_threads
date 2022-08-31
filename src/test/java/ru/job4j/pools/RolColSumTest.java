@@ -7,7 +7,7 @@ import java.util.concurrent.ExecutionException;
 
 import static org.assertj.core.api.Assertions.*;
 
-class RolColSumTest {
+public class RolColSumTest {
 
     @Test
     public void whenSumSecondColumn15() throws ExecutionException, InterruptedException {
